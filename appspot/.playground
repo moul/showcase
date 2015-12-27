@@ -1,0 +1,8 @@
+{
+    "project_name": "moul-showcase",
+    "project_description": "moul's shocase",
+    "show_files": [
+        "app.go",
+        "app.yaml"
+    ]
+}
