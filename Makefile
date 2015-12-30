@@ -42,3 +42,10 @@ goapp_serve:
 .PHONY: goapp_deploy
 goapp_deploy:
 	goapp deploy -application moul-showcase ./appspot/app.yaml
+
+
+.PHONY: gin
+gin:
+	$(GO) get ./...
+	$(GO) get github.com/codegangsta/gin
+	cd ./cmd/showcase; $(GOENV) gin --immediate --port=$(PORT) server
