@@ -19,8 +19,8 @@
 		},
 		{
 			"ImportPath": "github.com/getmillipede/millipede-go",
-			"Comment": "v1.2.0-44-g04fdb9b",
-			"Rev": "04fdb9bf9c89fa5a6fcf8bcfaed16c551adfab4a"
+			"Comment": "v1.2.0-46-ga0dab05",
+			"Rev": "a0dab05c43d216dceb73d40578701dce34e6b6a5"
 		},
 		{
 			"ImportPath": "github.com/gin-gonic/gin",
