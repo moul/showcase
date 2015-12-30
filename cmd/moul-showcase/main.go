@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
+	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
@@ -36,11 +38,26 @@ func main() {
 
 func CliActionCallback(c *cli.Context) {
 	action := c.Command.Name
-	ret, err := moulshowcase.Actions()[action](c.Args())
+
+	// parse CLI arguments
+	args := []string{}
+	for _, arg := range c.Args() {
+		if arg[:2] == "--" {
+			args = append(args, arg[2:])
+
+		} else {
+			args = append(args, fmt.Sprintf("arg=%s", arg))
+		}
+	}
+	qs := strings.Join(args, "&")
+
+	// call action
+	ret, err := moulshowcase.Actions()[action](qs)
 	if err != nil {
 		logrus.Fatalf("Failed to execute %q: %v", action, err)
 	}
 
+	// render result
 	switch ret.ContentType {
 	case "application/json":
 		out, err := json.MarshalIndent(ret.Body, "", "  ")
@@ -69,7 +86,12 @@ func Daemon(c *cli.Context) {
 	})
 	for action, fn := range moulshowcase.Actions() {
 		r.GET(fmt.Sprintf("/%s", action), func(c *gin.Context) {
-			ret, err := fn(nil)
+			u, err := url.Parse(c.Request.URL.String())
+			if err != nil {
+				c.String(500, fmt.Sprintf("failed to parse url %q: %v", c.Request.URL.String(), err))
+			}
+
+			ret, err := fn(u.RawQuery)
 			if err != nil {
 				c.JSON(500, gin.H{
 					"err": err,

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/moul/showcase"
@@ -18,16 +19,29 @@ func init() {
 func actionHandler(w http.ResponseWriter, r *http.Request) {
 	path := strings.TrimLeft(r.URL.Path, "/")
 	if fn, found := moulshowcase.Actions()[path]; found {
-		args := []string{}
-		ret, err := fn(args)
+		// parse CLI arguments
+		u, err := url.Parse(r.URL.String())
+		if err != nil {
+			http.Error(w, fmt.Sprintf("failed to parse url %q: %v", r.URL.String(), err), 500)
+		}
 
+		// call action
+		ret, err := fn(u.RawQuery)
+
+		// render result
 		if err != nil {
 			http.Error(w, fmt.Sprintf("service error: %v\n", err), 500)
 		} else {
-			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			enc := json.NewEncoder(w)
-			if err := enc.Encode(&ret); err != nil {
-				http.Error(w, fmt.Sprintf("json encode error: %v\n", err), 500)
+			switch ret.ContentType {
+			case "application/json":
+				w.Header().Set("Content-Type", "application/json; charset=utf-8")
+				enc := json.NewEncoder(w)
+				if err := enc.Encode(&(ret.Body)); err != nil {
+					http.Error(w, fmt.Sprintf("json encode error: %v\n", err), 500)
+				}
+			case "text/plain":
+				w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+				fmt.Fprintf(w, "%s", ret.Body)
 			}
 		}
 	} else {

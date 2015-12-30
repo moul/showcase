@@ -2,7 +2,7 @@ package moulshowcase
 
 var ActionsMap map[string]Action
 
-type Action func([]string) (*ActionResponse, error)
+type Action func(string) (*ActionResponse, error)
 
 func RegisterAction(name string, action Action) {
 	if ActionsMap == nil {
