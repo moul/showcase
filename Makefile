@@ -2,6 +2,7 @@ GOENV ?=	GO15VENDOREXPERIMENT=1
 GODEP ?=	$(GOENV) godep
 GO ?=		$(GOENV) go
 SOURCES :=	$(shell find . -name "*.go")
+PORT ?=		8080
 
 all: build
 
@@ -48,4 +49,4 @@ goapp_deploy:
 gin:
 	$(GO) get ./...
 	$(GO) get github.com/codegangsta/gin
-	cd ./cmd/showcase; $(GOENV) gin --immediate --port=$(PORT) server
+	cd ./cmd/moul-showcase; $(GOENV) gin --immediate --port=$(PORT) server
