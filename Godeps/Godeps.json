@@ -1,0 +1,85 @@
+{
+	"ImportPath": "github.com/moul/showcase",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"github.com/moul/showcase",
+		"github.com/moul/showcase/appspot",
+		"github.com/moul/showcase/cmd/moul-showcase"
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.8.7-53-g446d1c1",
+			"Rev": "446d1c146faa8ed3f4218f056fcd165f6bcfda81"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "1.2.0-187-gc31a797",
+			"Rev": "c31a7975863e7810c92e2e288a9ab074f9a88f29"
+		},
+		{
+			"ImportPath": "github.com/getmillipede/millipede-go",
+			"Comment": "v1.2.0-44-g04fdb9b",
+			"Rev": "04fdb9bf9c89fa5a6fcf8bcfaed16c551adfab4a"
+		},
+		{
+			"ImportPath": "github.com/gin-gonic/gin",
+			"Comment": "v1.0rc1-148-g52fcc5d",
+			"Rev": "52fcc5dbf6e94df33ad313858fb94b713e9d1b4a"
+		},
+		{
+			"ImportPath": "github.com/gorilla/schema",
+			"Rev": "14c555599c2a4f493c1e13fd1ea6fdf721739028"
+		},
+		{
+			"ImportPath": "github.com/kortschak/zalgo",
+			"Rev": "8c91a4a457cf5b7abdd741f1ee7f73b68a3a8212"
+		},
+		{
+			"ImportPath": "github.com/manucorporat/sse",
+			"Rev": "fe6ea2c8e398672518ef204bf0fbd9af858d0e15"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-colorable",
+			"Rev": "3dac7b4f76f6e17fb39b768b89e3783d16e237fe"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-isatty",
+			"Rev": "56b76bdf51f7708750eac80fa38b952bb9f32639"
+		},
+		{
+			"ImportPath": "github.com/mgutz/ansi",
+			"Rev": "c286dcecd19ff979eeb73ea444e479b903f2cfcb"
+		},
+		{
+			"ImportPath": "github.com/moul/sapin",
+			"Comment": "v1.1.0-1-gb554906",
+			"Rev": "b5549067c1037c6ad577dfb446edd7d4663363fd"
+		},
+		{
+			"ImportPath": "github.com/moul/shikaku",
+			"Rev": "60193a2bce43c60bab7eff1a02b568e240fdedb6"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "f18420efc3b4f8e9f3d51f6bd2476e92c46260e9"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "0cb26f788dd4625d1956c6fd97ffc4c90669d129"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html",
+			"Rev": "0cb26f788dd4625d1956c6fd97ffc4c90669d129"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "58da1121af381632b48b2843aeb16299f2e1dc50"
+		},
+		{
+			"ImportPath": "gopkg.in/bluesuncorp/validator.v5",
+			"Comment": "v5.12",
+			"Rev": "d5acf1dac43705f8bfbb71d878e290e2bed3950b"
+		}
+	]
+}
