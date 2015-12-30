@@ -10,7 +10,7 @@ func init() {
 	RegisterAction("sapin", SapinAction)
 }
 
-func SapinAction(args []string) (interface{}, error) {
-	sapin := sapin.NewSapin(20)
-	return fmt.Sprintf("%s", sapin), nil
+func SapinAction(args []string) (*ActionResponse, error) {
+	sapin := sapin.NewSapin(5)
+	return PlainResponse(fmt.Sprintf("%s", sapin)), nil
 }

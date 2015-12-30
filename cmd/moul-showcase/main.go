@@ -41,11 +41,19 @@ func CliActionCallback(c *cli.Context) {
 		logrus.Fatalf("Failed to execute %q: %v", action, err)
 	}
 
-	out, err := json.MarshalIndent(ret, "", "  ")
-	if err != nil {
-		logrus.Fatalf("Failed to marshal json: %v", err)
+	switch ret.ContentType {
+	case "application/json":
+		out, err := json.MarshalIndent(ret.Body, "", "  ")
+		if err != nil {
+			logrus.Fatalf("Failed to marshal json: %v", err)
+		}
+		fmt.Printf("%s\n", out)
+		return
+	case "text/plain":
+		fmt.Printf("%s", ret.Body)
+	default:
+		logrus.Fatalf("Unhandled Content-Type: %q", ret.ContentType)
 	}
-	fmt.Printf("%s\n", out)
 }
 
 func Daemon(c *cli.Context) {
@@ -68,7 +76,16 @@ func Daemon(c *cli.Context) {
 				})
 				return
 			}
-			c.JSON(200, ret)
+			switch ret.ContentType {
+			case "application/json":
+				c.JSON(200, ret.Body)
+				return
+			case "text/plain":
+				c.String(200, fmt.Sprintf("%s", ret.Body))
+				return
+			default:
+				logrus.Fatalf("Unhandled Content-Type: %q", ret.ContentType)
+			}
 		})
 	}
 	port := "8080"
