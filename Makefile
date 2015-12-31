@@ -11,19 +11,21 @@ build: moul-showcase
 
 .PHONY: test
 test:
+	$(GO) get github.com/tools/godep
 	$(GODEP) restore
 	$(GO) get -t .
 	$(GO) test -v .
 
 .PHONY: godep-save
 godep-save:
+	$(GO) get github.com/tools/godep
 	$(GODEP) save $(shell go list ./... | grep -v /vendor/)
 
 .PHONY: godep-update
 godep-update:
+	GO15VENDOREXPERIMENT=1 go get -u -v $(go list ./... | grep -v /vendor/)
 	rm -rf vendor Godeps
-	GO15VENDOREXPERIMENT=0 go get -u -t -v ./...
-	GO15VENDOREXPERIMENT=0 godep save ./...
+	GO15VENDOREXPERIMENT=1 godep save $(go list ./... | grep -v /vendor/)
 	mv Godeps/_workspace/src vendor
 	rm -rf Godeps/_workspace
 
