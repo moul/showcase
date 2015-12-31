@@ -2,6 +2,7 @@ package moulshowcase
 
 import (
 	"fmt"
+	"io"
 	"net/url"
 
 	"github.com/gorilla/schema"
@@ -12,7 +13,7 @@ func init() {
 	RegisterAction("sapin", SapinAction)
 }
 
-func SapinAction(qs string) (*ActionResponse, error) {
+func SapinAction(qs string, stdin io.Reader) (*ActionResponse, error) {
 	// Define arguments
 	var opts struct {
 		Size     int  `schema:"size"`

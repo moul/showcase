@@ -1,6 +1,7 @@
 package moulshowcase
 
 import (
+	"io"
 	"math/rand"
 	"net/url"
 	"strings"
@@ -13,7 +14,7 @@ func init() {
 	RegisterAction("shikaku", ShikakuAction)
 }
 
-func ShikakuAction(qs string) (*ActionResponse, error) {
+func ShikakuAction(qs string, stdin io.Reader) (*ActionResponse, error) {
 	// Define arguments
 	var opts struct {
 		Width  int `schema:"width"`

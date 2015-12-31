@@ -1,8 +1,10 @@
 package moulshowcase
 
+import "io"
+
 var ActionsMap map[string]Action
 
-type Action func(string) (*ActionResponse, error)
+type Action func(string, io.Reader) (*ActionResponse, error)
 
 func RegisterAction(name string, action Action) {
 	if ActionsMap == nil {

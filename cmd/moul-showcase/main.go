@@ -52,7 +52,7 @@ func CliActionCallback(c *cli.Context) {
 	qs := strings.Join(args, "&")
 
 	// call action
-	ret, err := moulshowcase.Actions()[action](qs)
+	ret, err := moulshowcase.Actions()[action](qs, os.Stdin)
 	if err != nil {
 		logrus.Fatalf("Failed to execute %q: %v", action, err)
 	}
@@ -85,30 +85,37 @@ func Daemon(c *cli.Context) {
 		})
 	})
 	for action, fn := range moulshowcase.Actions() {
-		r.GET(fmt.Sprintf("/%s", action), func(c *gin.Context) {
-			u, err := url.Parse(c.Request.URL.String())
-			if err != nil {
-				c.String(500, fmt.Sprintf("failed to parse url %q: %v", c.Request.URL.String(), err))
-			}
+		func(action string, fn moulshowcase.Action) {
+			callback := func(c *gin.Context) {
+				u, err := url.Parse(c.Request.URL.String())
+				if err != nil {
+					c.String(500, fmt.Sprintf("failed to parse url %q: %v", c.Request.URL.String(), err))
+				}
 
-			ret, err := fn(u.RawQuery)
-			if err != nil {
-				c.JSON(500, gin.H{
-					"err": err,
-				})
-				return
+				ret, err := fn(u.RawQuery, c.Request.Body)
+				if err != nil {
+					c.JSON(500, gin.H{
+						"err": err,
+					})
+					return
+				}
+				switch ret.ContentType {
+				case "application/json":
+					c.JSON(200, ret.Body)
+					return
+				case "text/plain":
+					c.String(200, fmt.Sprintf("%s", ret.Body))
+					return
+				default:
+					logrus.Fatalf("Unhandled Content-Type: %q", ret.ContentType)
+				}
 			}
-			switch ret.ContentType {
-			case "application/json":
-				c.JSON(200, ret.Body)
-				return
-			case "text/plain":
-				c.String(200, fmt.Sprintf("%s", ret.Body))
-				return
-			default:
-				logrus.Fatalf("Unhandled Content-Type: %q", ret.ContentType)
-			}
-		})
+			r.GET(fmt.Sprintf("/%s", action), callback)
+			r.POST(fmt.Sprintf("/%s", action), callback)
+			//r.PUT(fmt.Sprintf("/%s", action), callback)
+			//r.PATCH(fmt.Sprintf("/%s", action), callback)
+			//r.DELETE(fmt.Sprintf("/%s", action), callback)
+		}(action, fn)
 	}
 	port := "8080"
 	if os.Getenv("PORT") != "" {

@@ -1,6 +1,7 @@
 package moulshowcase
 
 import (
+	"io"
 	"net/url"
 
 	"github.com/getmillipede/millipede-go"
@@ -11,7 +12,7 @@ func init() {
 	RegisterAction("millipede", MillipedeAction)
 }
 
-func MillipedeAction(qs string) (*ActionResponse, error) {
+func MillipedeAction(qs string, stdin io.Reader) (*ActionResponse, error) {
 	// Define arguments
 	var opts struct {
 		Size     uint64 `schema:"size"`
