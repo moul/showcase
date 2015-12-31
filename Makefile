@@ -45,6 +45,16 @@ goapp_deploy:
 	goapp deploy -application moul-showcase ./appspot/app.yaml
 
 
+heroku_deploy:
+	#git remote add heroku https://git.heroku.com/moul-showcase.git
+	git push heroku master
+
+
+dokku_deploy:
+	#git remote add dokku dokku@dokku.m.42.am:moul-showcase
+	git push dokku master
+
+
 .PHONY: gin
 gin:
 	$(GO) get ./...
