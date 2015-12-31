@@ -2,9 +2,7 @@
 	"ImportPath": "github.com/moul/showcase",
 	"GoVersion": "go1.5",
 	"Packages": [
-		"github.com/moul/showcase",
-		"github.com/moul/showcase/appspot",
-		"github.com/moul/showcase/cmd/moul-showcase"
+		"./..."
 	],
 	"Deps": [
 		{
@@ -19,8 +17,8 @@
 		},
 		{
 			"ImportPath": "github.com/getmillipede/millipede-go",
-			"Comment": "v1.2.0-46-ga0dab05",
-			"Rev": "a0dab05c43d216dceb73d40578701dce34e6b6a5"
+			"Comment": "v1.2.0-45-gc3fffe0",
+			"Rev": "c3fffe055f66af847c9389959b1c20f4433e1657"
 		},
 		{
 			"ImportPath": "github.com/gin-gonic/gin",
@@ -74,7 +72,7 @@
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
-			"Rev": "58da1121af381632b48b2843aeb16299f2e1dc50"
+			"Rev": "833a04a10549a95dc34458c195cbad61bbb6cb4d"
 		},
 		{
 			"ImportPath": "gopkg.in/bluesuncorp/validator.v5",

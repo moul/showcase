@@ -19,6 +19,14 @@ test:
 godep-save:
 	$(GODEP) save $(shell go list ./... | grep -v /vendor/)
 
+.PHONY: godep-update
+godep-update:
+	rm -rf vendor Godeps
+	GO15VENDOREXPERIMENT=0 go get -u -t -v ./...
+	GO15VENDOREXPERIMENT=0 godep save ./...
+	mv Godeps/_workspace/src vendor
+	rm -rf Godeps/_workspace
+
 .PHONY: cover
 	rm -f profile.out
 	$(GO) test -covermode=count -coverpkg=. -coverprofile=profile.out
