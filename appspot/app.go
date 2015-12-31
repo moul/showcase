@@ -43,7 +43,7 @@ func actionHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// call action
-		ret, err := fn(u.RawQuery)
+		ret, err := fn(u.RawQuery, r.Body)
 
 		// render result
 		if err != nil {
