@@ -56,12 +56,12 @@ goapp_deploy:
 
 
 heroku_deploy:
-	#git remote add heroku https://git.heroku.com/moul-showcase.git
+	git remote add heroku https://git.heroku.com/moul-showcase.git || true
 	git push heroku master
 
 
 dokku_deploy:
-	#git remote add dokku dokku@dokku.m.42.am:moul-showcase
+	git remote add dokku dokku@dokku.m.42.am:moul-showcase || true
 	git push dokku master
 
 
