@@ -2,7 +2,9 @@
 	"ImportPath": "github.com/moul/showcase",
 	"GoVersion": "go1.5",
 	"Packages": [
-		"./..."
+		"github.com/moul/showcase",
+		"github.com/moul/showcase/appspot",
+		"github.com/moul/showcase/cmd/moul-showcase"
 	],
 	"Deps": [
 		{
@@ -50,6 +52,23 @@
 			"Rev": "c286dcecd19ff979eeb73ea444e479b903f2cfcb"
 		},
 		{
+			"ImportPath": "github.com/moul/anonuuid",
+			"Comment": "v1.0.0-12-g933bb04",
+			"Rev": "933bb0413adf7dea35ec1f0430ceaf8302de5893"
+		},
+		{
+			"ImportPath": "github.com/moul/einstein-riddle-generator",
+			"Rev": "12000570abfbdc5fc0f2315d6016ddfc79383345"
+		},
+		{
+			"ImportPath": "github.com/moul/go-sshkeys",
+			"Rev": "6408b003dd3c4d0d5155c4fa834f7b7b68c29a2c"
+		},
+		{
+			"ImportPath": "github.com/moul/no-ansi",
+			"Rev": "6d3470fd4353efe713406b8b9cd48115400debfe"
+		},
+		{
 			"ImportPath": "github.com/moul/sapin",
 			"Comment": "v1.1.0-1-gb554906",
 			"Rev": "b5549067c1037c6ad577dfb446edd7d4663363fd"
@@ -59,7 +78,11 @@
 			"Rev": "60193a2bce43c60bab7eff1a02b568e240fdedb6"
 		},
 		{
-			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"ImportPath": "golang.org/x/crypto/curve25519",
+			"Rev": "f18420efc3b4f8e9f3d51f6bd2476e92c46260e9"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh",
 			"Rev": "f18420efc3b4f8e9f3d51f6bd2476e92c46260e9"
 		},
 		{
