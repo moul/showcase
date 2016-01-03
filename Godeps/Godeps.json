@@ -8,6 +8,15 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "github.com/BurntSushi/toml",
+			"Comment": "v0.1.0-21-g056c9bc",
+			"Rev": "056c9bc7be7190eaa7715723883caffa5f8fa3e4"
+		},
+		{
+			"ImportPath": "github.com/DHowett/go-plist",
+			"Rev": "9d4781c3725973c23da5f4d1de1920a188e755d3"
+		},
+		{
 			"ImportPath": "github.com/Sirupsen/logrus",
 			"Comment": "v0.8.7-53-g446d1c1",
 			"Rev": "446d1c146faa8ed3f4218f056fcd165f6bcfda81"
@@ -30,6 +39,10 @@
 		{
 			"ImportPath": "github.com/gorilla/schema",
 			"Rev": "14c555599c2a4f493c1e13fd1ea6fdf721739028"
+		},
+		{
+			"ImportPath": "github.com/hydrogen18/stalecucumber",
+			"Rev": "f7672eb9e84ddc8d602651e7d60eae5b6d221b11"
 		},
 		{
 			"ImportPath": "github.com/kortschak/zalgo",
@@ -55,6 +68,10 @@
 			"ImportPath": "github.com/moul/anonuuid",
 			"Comment": "v1.0.0-12-g933bb04",
 			"Rev": "933bb0413adf7dea35ec1f0430ceaf8302de5893"
+		},
+		{
+			"ImportPath": "github.com/moul/bafelbish",
+			"Rev": "4caa08d53915aade3c8e82110f23a9ffc8b45f12"
 		},
 		{
 			"ImportPath": "github.com/moul/einstein-riddle-generator",
@@ -101,6 +118,20 @@
 			"ImportPath": "gopkg.in/bluesuncorp/validator.v5",
 			"Comment": "v5.12",
 			"Rev": "d5acf1dac43705f8bfbb71d878e290e2bed3950b"
+		},
+		{
+			"ImportPath": "gopkg.in/vmihailenco/msgpack.v2",
+			"Comment": "v2.4.2",
+			"Rev": "c374c7c3dc0758cb8ef9c653b6739362841e245d"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Rev": "7ad95dd0798a40da1ccdff6dff35fd177b5edf40"
+		},
+		{
+			"ImportPath": "labix.org/v2/mgo/bson",
+			"Comment": "287",
+			"Rev": "gustavo@niemeyer.net-20140501184651-975yyw9ipld92pji"
 		}
 	]
 }
