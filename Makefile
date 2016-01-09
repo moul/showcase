@@ -30,6 +30,7 @@ godep-update:
 	rm -rf Godeps/_workspace
 
 .PHONY: cover
+cover:
 	rm -f profile.out
 	$(GO) test -covermode=count -coverpkg=. -coverprofile=profile.out
 
