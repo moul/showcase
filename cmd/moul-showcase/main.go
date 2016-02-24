@@ -11,6 +11,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/gin-gonic/gin"
 	"github.com/moul/showcase"
+	"github.com/stvp/rollbar"
 )
 
 func main() {
@@ -75,6 +76,12 @@ func CliActionCallback(c *cli.Context) {
 
 func Daemon(c *cli.Context) {
 	r := gin.Default()
+
+	rollbar.Token = os.Getenv("ROLLBAR_TOKEN")
+	rollbar.Environment = "production"
+
+	rollbar.Message("info", "Starting daemon")
+
 	r.GET("/", func(c *gin.Context) {
 		services := []string{}
 		for action := range moulshowcase.Actions() {
@@ -89,11 +96,16 @@ func Daemon(c *cli.Context) {
 			callback := func(c *gin.Context) {
 				u, err := url.Parse(c.Request.URL.String())
 				if err != nil {
+					rollbar.Error(rollbar.ERR, err)
+					rollbar.Wait()
 					c.String(500, fmt.Sprintf("failed to parse url %q: %v", c.Request.URL.String(), err))
+					return
 				}
 
 				ret, err := fn(u.RawQuery, c.Request.Body)
 				if err != nil {
+					rollbar.Error(rollbar.ERR, err)
+					rollbar.Wait()
 					c.JSON(500, gin.H{
 						"err": err,
 					})
@@ -107,7 +119,10 @@ func Daemon(c *cli.Context) {
 					c.String(200, fmt.Sprintf("%s", ret.Body))
 					return
 				default:
-					logrus.Fatalf("Unhandled Content-Type: %q", ret.ContentType)
+					err := fmt.Errorf("Unhandled Content-Type: %q", ret.ContentType)
+					rollbar.Error(rollbar.ERR, err)
+					rollbar.Wait()
+					logrus.Fatal(err)
 				}
 			}
 			r.GET(fmt.Sprintf("/%s", action), callback)
