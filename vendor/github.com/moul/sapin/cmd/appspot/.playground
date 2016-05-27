@@ -1,8 +1,0 @@
-{
-    "project_name": "Sapin",
-    "project_description": "Print beautiful christmas trees",
-    "show_files": [
-        "app.go",
-        "app.yaml"
-    ]
-}

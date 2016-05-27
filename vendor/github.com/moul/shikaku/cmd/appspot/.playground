@@ -1,8 +1,0 @@
-{
-    "project_name": "Shikaku",
-    "project_description": "Shikaku generator",
-    "show_files": [
-        "app.go",
-        "app.yaml"
-    ]
-}
