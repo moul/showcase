@@ -30,3 +30,11 @@ func PlainResponse(body interface{}) *ActionResponse {
 		IsJson:      false,
 	}
 }
+
+func JsonResponse(obj interface{}) *ActionResponse {
+	return &ActionResponse{
+		Body:        obj,
+		ContentType: "application/json",
+		IsJson:      true,
+	}
+}
