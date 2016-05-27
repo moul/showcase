@@ -42,7 +42,6 @@ func BolosseumTictactoeAction(qs string, stdin io.Reader) (*ActionResponse, erro
 
 	// FIXME: validate input
 
-	fmt.Println(question)
 	bot := tictactoebot.NewTictactoeBot()
 	reply := &bots.ReplyMessage{}
 	switch question.Action {
