@@ -1,6 +1,7 @@
 package moulshowcase
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -35,8 +36,20 @@ func BolosseumTictactoeAction(qs string, stdin io.Reader) (*ActionResponse, erro
 		}
 	}
 
+	var inputMessage string
+
+	if opts.Message != "" {
+		inputMessage = opts.Message
+	} else {
+		scanner := bufio.NewScanner(stdin)
+		for scanner.Scan() {
+			line := scanner.Text()
+			inputMessage += line
+		}
+	}
+
 	var question bots.QuestionMessage
-	if err := json.Unmarshal([]byte(opts.Message), &question); err != nil {
+	if err := json.Unmarshal([]byte(inputMessage), &question); err != nil {
 		return nil, err
 	}
 
