@@ -92,15 +92,15 @@
 		},
 		{
 			"ImportPath": "github.com/moul/bolosseum/bots",
-			"Rev": "c9ede28605b0ca1478353dc467c2fb467201d5f8"
+			"Rev": "1c67501a2045a8897251dd5b422d53be5a892845"
 		},
 		{
 			"ImportPath": "github.com/moul/bolosseum/sdks/go",
-			"Rev": "c9ede28605b0ca1478353dc467c2fb467201d5f8"
+			"Rev": "1c67501a2045a8897251dd5b422d53be5a892845"
 		},
 		{
 			"ImportPath": "github.com/moul/connect-four",
-			"Rev": "b012c30e79263be66ec18e8e3f33eadfd1c2c95a"
+			"Rev": "38a83152030e240c413fba66d3443aa07c69c923"
 		},
 		{
 			"ImportPath": "github.com/moul/einstein-riddle-generator",
