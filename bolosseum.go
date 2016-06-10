@@ -9,14 +9,27 @@ import (
 
 	"github.com/gorilla/schema"
 	"github.com/moul/bolosseum/bots"
+	"github.com/moul/bolosseum/sdks/go"
+	"github.com/moul/connect-four"
 	"github.com/moul/tictactoe/pkg/tictactoebot"
 )
 
 func init() {
 	RegisterAction("bolosseum-tictactoe", BolosseumTictactoeAction)
+	RegisterAction("bolosseum-connectfour", BolosseumConnectfourAction)
+}
+
+func BolosseumConnectfourAction(qs string, stdin io.Reader) (*ActionResponse, error) {
+	bot := connectfour.NewConnectfourBot()
+	return BolosseumGenericAction(bot, qs, stdin)
 }
 
 func BolosseumTictactoeAction(qs string, stdin io.Reader) (*ActionResponse, error) {
+	bot := tictactoebot.NewTictactoeBot()
+	return BolosseumGenericAction(bot, qs, stdin)
+}
+
+func BolosseumGenericAction(bot bolosseumbot.BolosseumBot, qs string, stdin io.Reader) (*ActionResponse, error) {
 	// Define arguments
 	var opts struct {
 		Message string `schema:"message"`
@@ -55,7 +68,6 @@ func BolosseumTictactoeAction(qs string, stdin io.Reader) (*ActionResponse, erro
 
 	// FIXME: validate input
 
-	bot := tictactoebot.NewTictactoeBot()
 	reply := &bots.ReplyMessage{}
 	switch question.Action {
 	case "init":
