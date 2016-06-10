@@ -100,7 +100,7 @@
 		},
 		{
 			"ImportPath": "github.com/moul/connect-four",
-			"Rev": "38a83152030e240c413fba66d3443aa07c69c923"
+			"Rev": "a0506025e0b57822f49760547537a19596d428f0"
 		},
 		{
 			"ImportPath": "github.com/moul/einstein-riddle-generator",
