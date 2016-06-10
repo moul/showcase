@@ -5,14 +5,17 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/moul/bolosseum/bots"
+	"github.com/moul/bolosseum/sdks/go"
 	"github.com/moul/tictactoe"
 )
+
+type TictactoeBot struct {
+	bolosseumbot.BolosseumBot
+}
 
 func NewTictactoeBot() *TictactoeBot {
 	return &TictactoeBot{}
 }
-
-type TictactoeBot struct{}
 
 func (b *TictactoeBot) Init(message bots.QuestionMessage) *bots.ReplyMessage {
 	// FIXME: init ttt here

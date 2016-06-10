@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"regexp"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -18,8 +17,6 @@ var (
 // AnonUUID is the main structure, it contains the cache map and helpers
 type AnonUUID struct {
 	cache map[string]string
-
-	guard sync.Mutex // cache guard
 
 	// Hexspeak flag will generate hexspeak style fake UUIDs
 	Hexspeak bool
@@ -61,8 +58,6 @@ func (a *AnonUUID) FakeUUID(input string) string {
 			return "invaliduuid"
 		}
 	}
-	a.guard.Lock()
-	defer a.guard.Unlock()
 	if _, ok := a.cache[input]; !ok {
 
 		if a.KeepBeginning {

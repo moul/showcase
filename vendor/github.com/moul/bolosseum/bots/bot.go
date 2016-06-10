@@ -9,19 +9,19 @@ type Bot interface {
 }
 
 type QuestionMessage struct {
-	GameID      string      `json:"game-id"`
-	Action      string      `json:"action"`
-	Game        string      `json:"game"`
-	Players     int         `json:"players"`
-	Board       interface{} `json:"board"`
-	You         interface{} `json:"you"`
-	PlayerIndex int         `json:"player-index"`
+	GameID      string      `json:"game-id",omitempty binding:"required"`
+	Action      string      `json:"action",omitempty binding:"required"`
+	Game        string      `json:"game",omitempty binding:"required"`
+	Players     int         `json:"players",omitempty`
+	Board       interface{} `json:"board",omitempty`
+	You         interface{} `json:"you",omitempty`
+	PlayerIndex int         `json:"player-index",omitempty binding:"required"`
 }
 
 type ReplyMessage struct {
-	Name  string      `json:"name"`
-	Play  interface{} `json:"play"`
-	Error interface{} `json:"error"`
+	Name  string      `json:"name",omitempty`
+	Play  interface{} `json:"play",omitempty`
+	Error interface{} `json:"error",omitempty`
 }
 
 // InitTurnBasedBots is an helper that starts and discovers connected bots
