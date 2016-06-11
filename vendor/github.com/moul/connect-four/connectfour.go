@@ -4,7 +4,12 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"os"
+	"strconv"
+	"strings"
 	"time"
+
+	"gopkg.in/redis.v3"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/moul/bolosseum/bots"
@@ -15,10 +20,23 @@ var Rows = 6
 var Cols = 7
 var MaxDeepness = 6
 
+var rc *redis.Client
 var c *cache.Cache
 
 func init() {
+	// initialize cache
 	c = cache.New(5*time.Minute, 30*time.Second)
+
+	// initialize redis
+	if os.Getenv("REDIS_HOSTNAME") != "" {
+		rc = redis.NewClient(&redis.Options{
+			Addr:     os.Getenv("REDIS_HOSTNAME"),
+			Password: os.Getenv("REDIS_PASSWORD"),
+			DB:       0,
+		})
+		pong, err := rc.Ping().Result()
+		logrus.Warnf("Redis ping: %v, %v", pong, err)
+	}
 }
 
 func NewConnectfourBot() *ConnectfourBot {
@@ -182,6 +200,24 @@ func (b *ConnectFour) BestMovements() []Movement {
 		return cachedMoves.([]Movement)
 	}
 
+	if rc != nil {
+		cachedMoves, err := rc.Get(hash).Result()
+		if err == nil {
+			moves := []Movement{}
+			for _, playStr := range strings.Split(cachedMoves, ",") {
+				play, _ := strconv.Atoi(playStr)
+				moves = append(moves, Movement{
+					Play: play,
+				})
+			}
+			c.Set(hash, moves, -1)
+			return moves
+		}
+		if err != redis.Nil {
+			logrus.Errorf("Redis: failed to get value for hash=%q: %v", hash, err)
+		}
+	}
+
 	logrus.Warnf("bot: %v", b)
 	moves := b.ScoreMovements(b.Player, 1)
 	logrus.Warnf("score-moves: %v", moves)
@@ -206,6 +242,18 @@ func (b *ConnectFour) BestMovements() []Movement {
 	}
 
 	c.Set(hash, bestMoves, -1)
+	if rc != nil {
+		bestMovesStr := ""
+		if len(bestMoves) > 0 {
+			bestMovesStr = fmt.Sprintf("%d", bestMoves[0].Play)
+			for _, move := range bestMoves[1:] {
+				bestMovesStr += fmt.Sprintf(",%d", move.Play)
+			}
+		}
+		if err := rc.Set(hash, bestMovesStr, 0).Err(); err != nil {
+			logrus.Errorf("Redis: failed to write value for hash=%q", hash)
+		}
+	}
 	return bestMoves
 }
 

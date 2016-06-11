@@ -100,7 +100,7 @@
 		},
 		{
 			"ImportPath": "github.com/moul/connect-four",
-			"Rev": "6629297bee497e0e39b9cbaab3205665ac2ebe7d"
+			"Rev": "0706016612d58c70352a53bdd07bfd752e94a934"
 		},
 		{
 			"ImportPath": "github.com/moul/einstein-riddle-generator",
@@ -208,9 +208,28 @@
 			"Rev": "f64b50fbea64174967a8882830d621a18ee1548e"
 		},
 		{
+			"ImportPath": "gopkg.in/bsm/ratelimit.v1",
+			"Rev": "bda20d5067a03094fc6762f7ead53027afac5f28"
+		},
+		{
+			"ImportPath": "gopkg.in/bufio.v1",
+			"Comment": "v1",
+			"Rev": "567b2bfa514e796916c4747494d6ff5132a1dfce"
+		},
+		{
 			"ImportPath": "gopkg.in/go-playground/validator.v8",
 			"Comment": "v8.17.1",
 			"Rev": "014792cf3e266caff1e916876be12282b33059e0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v3",
+			"Comment": "v3.2.5",
+			"Rev": "73e1e9f501e946d35387e30f49ef58adda82b4ee"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v3/internal/consistenthash",
+			"Comment": "v3.2.5",
+			"Rev": "73e1e9f501e946d35387e30f49ef58adda82b4ee"
 		},
 		{
 			"ImportPath": "gopkg.in/vmihailenco/msgpack.v2",
