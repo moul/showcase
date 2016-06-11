@@ -1,16 +1,25 @@
 package connectfour
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/moul/bolosseum/bots"
+	"github.com/robfig/go-cache"
 )
 
 var Rows = 6
 var Cols = 7
 var MaxDeepness = 6
+
+var c *cache.Cache
+
+func init() {
+	c = cache.New(5*time.Minute, 30*time.Second)
+}
 
 func NewConnectfourBot() *ConnectfourBot {
 	return &ConnectfourBot{}
@@ -50,44 +59,38 @@ func (b *ConnectfourBot) PlayTurn(question bots.QuestionMessage) *bots.ReplyMess
 		}
 	}
 
-	// Debug
-	logrus.Warnf("bot: %v", bot)
-	moves := bot.ScoreMovements(bot.Player, 1)
-	logrus.Warnf("score-moves: %v", moves)
-	bot.PrintMap()
-
+	// get movements
+	moves := bot.BestMovements()
 	if len(moves) == 0 {
 		return &bots.ReplyMessage{
 			Error: "no available movement",
 		}
 	}
 
-	// take the best score
-	maxIdx := 0
-	maxScore := moves[0].Score
-	for idx, move := range moves {
-		if move.Score > maxScore {
-			maxScore = move.Score
-			maxIdx = idx
-		}
+	// pick one
+	picked := moves[rand.Intn(len(moves))]
+
+	logrus.Warnf("Playing %d with score %f, %d best moves", picked.Play, picked.Score, len(moves))
+	return &bots.ReplyMessage{
+		Play: picked.Play,
 	}
-	bestMoves := []Movement{}
-	for _, move := range moves {
-		if move.Score == maxScore {
-			bestMoves = append(bestMoves, move)
+}
+
+func (b *ConnectFour) Hash(currentPlayer string) string {
+	hash := ""
+	hash += fmt.Sprintf("%d", MaxDeepness)
+	for y := 0; y < Rows; y++ {
+		for x := 0; x < Cols; x++ {
+			if b.Board[y][x] != "" {
+				hash += b.Board[y][x]
+			} else {
+				hash += "."
+			}
 		}
-	}
-	picked := Movement{}
-	if len(bestMoves) > 1 {
-		picked = bestMoves[rand.Intn(len(bestMoves))]
-	} else {
-		picked = bestMoves[0]
 	}
 
-	logrus.Warnf("Playing %d with score %f, %d best moves", picked.Play, picked.Score, len(bestMoves))
-	return &bots.ReplyMessage{
-		Play: moves[maxIdx].Play,
-	}
+	hash += currentPlayer
+	return hash
 }
 
 type ConnectFour struct {
@@ -171,6 +174,39 @@ func (b *ConnectFour) Winner() string {
 	}
 
 	return ""
+}
+
+func (b *ConnectFour) BestMovements() []Movement {
+	hash := b.Hash(b.Player)
+	if cachedMoves, found := c.Get(hash); found {
+		return cachedMoves.([]Movement)
+	}
+
+	logrus.Warnf("bot: %v", b)
+	moves := b.ScoreMovements(b.Player, 1)
+	logrus.Warnf("score-moves: %v", moves)
+	b.PrintMap()
+
+	if len(moves) == 0 {
+		return moves
+	}
+
+	// take the best score
+	maxScore := moves[0].Score
+	for _, move := range moves {
+		if move.Score > maxScore {
+			maxScore = move.Score
+		}
+	}
+	bestMoves := []Movement{}
+	for _, move := range moves {
+		if move.Score == maxScore {
+			bestMoves = append(bestMoves, move)
+		}
+	}
+
+	c.Set(hash, bestMoves, -1)
+	return bestMoves
 }
 
 func (b *ConnectFour) ScoreMovements(currentPlayer string, deepness int) []Movement {
