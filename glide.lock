@@ -1,0 +1,117 @@
+hash: 4e2cdb59f3b2298fae205f362dae664383ee5bb6260c89cb7a68a1dd6c51729d
+updated: 2016-07-04T15:07:35.338675898+02:00
+imports:
+- name: github.com/BurntSushi/toml
+  version: ""
+- name: github.com/codegangsta/cli
+  version: ""
+- name: github.com/DHowett/go-plist
+  version: ""
+- name: github.com/getmillipede/millipede-go
+  version: ""
+- name: github.com/gin-gonic/gin
+  version: ""
+  subpackages:
+  - binding
+  - render
+- name: github.com/golang/protobuf
+  version: ""
+  subpackages:
+  - proto
+- name: github.com/gopherjs/gopherjs
+  version: ""
+  subpackages:
+  - js
+- name: github.com/gorilla/schema
+  version: ""
+- name: github.com/hydrogen18/stalecucumber
+  version: ""
+- name: github.com/jtolds/gls
+  version: ""
+- name: github.com/kortschak/zalgo
+  version: ""
+- name: github.com/manucorporat/sse
+  version: ""
+- name: github.com/mgutz/ansi
+  version: ""
+- name: github.com/moul/anonuuid
+  version: ""
+- name: github.com/moul/bafelbish
+  version: ""
+- name: github.com/moul/bolosseum
+  version: ""
+  subpackages:
+  - bots
+  - sdks/go
+- name: github.com/moul/connect-four
+  version: ""
+- name: github.com/moul/einstein-riddle-generator
+  version: ""
+- name: github.com/moul/go-sshkeys
+  version: ""
+- name: github.com/moul/no-ansi
+  version: ""
+- name: github.com/moul/sapin
+  version: ""
+- name: github.com/moul/shikaku
+  version: ""
+- name: github.com/moul/tictactoe
+  version: ""
+  subpackages:
+  - pkg/tictactoebot
+- name: github.com/robfig/go-cache
+  version: ""
+- name: github.com/Sirupsen/logrus
+  version: ""
+- name: github.com/smartystreets/assertions
+  version: ""
+  subpackages:
+  - internal/go-render/render
+  - internal/oglematchers
+- name: github.com/smartystreets/goconvey
+  version: ""
+  subpackages:
+  - convey
+  - convey/gotest
+  - convey/reporting
+- name: github.com/stvp/rollbar
+  version: ""
+- name: golang.org/x/crypto
+  version: ""
+  subpackages:
+  - curve25519
+  - ed25519
+  - ed25519/internal/edwards25519
+  - ssh
+  - ssh/terminal
+- name: golang.org/x/net
+  version: ""
+  subpackages:
+  - context
+  - html
+  - html/atom
+- name: golang.org/x/sys
+  version: ""
+  subpackages:
+  - unix
+- name: gopkg.in/bsm/ratelimit.v1
+  version: ""
+- name: gopkg.in/bufio.v1
+  version: ""
+- name: gopkg.in/go-playground/validator.v8
+  version: ""
+- name: gopkg.in/redis.v3
+  version: ""
+  subpackages:
+  - internal/consistenthash
+- name: gopkg.in/vmihailenco/msgpack.v2
+  version: ""
+  subpackages:
+  - codes
+- name: gopkg.in/yaml.v2
+  version: ""
+- name: labix.org/v2/mgo
+  version: ""
+  subpackages:
+  - bson
+devImports: []

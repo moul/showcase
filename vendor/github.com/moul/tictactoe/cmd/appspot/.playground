@@ -1,0 +1,8 @@
+{
+    "project_name": "Tictactoe",
+    "project_description": "Tictactoe resolver",
+    "show_files": [
+        "app.go",
+        "app.yaml"
+    ]
+}

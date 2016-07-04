@@ -1,16 +1,23 @@
 package redis
 
+import (
+	"gopkg.in/redis.v3/internal/hashtag"
+	"gopkg.in/redis.v3/internal/pool"
+)
+
 // ClusterPipeline is not thread-safe.
 type ClusterPipeline struct {
 	commandable
 
-	cmds    []Cmder
 	cluster *ClusterClient
-	closed  bool
+
+	cmds   []Cmder
+	closed bool
 }
 
 // Pipeline creates a new pipeline which is able to execute commands
-// against multiple shards.
+// against multiple shards. It's NOT safe for concurrent use by
+// multiple goroutines.
 func (c *ClusterClient) Pipeline() *ClusterPipeline {
 	pipe := &ClusterPipeline{
 		cluster: c,
@@ -20,6 +27,16 @@ func (c *ClusterClient) Pipeline() *ClusterPipeline {
 	return pipe
 }
 
+func (c *ClusterClient) Pipelined(fn func(*ClusterPipeline) error) ([]Cmder, error) {
+	pipe := c.Pipeline()
+	if err := fn(pipe); err != nil {
+		return nil, err
+	}
+	cmds, err := pipe.Exec()
+	_ = pipe.Close()
+	return cmds, err
+}
+
 func (pipe *ClusterPipeline) process(cmd Cmder) {
 	pipe.cmds = append(pipe.cmds, cmd)
 }
@@ -27,7 +44,7 @@ func (pipe *ClusterPipeline) process(cmd Cmder) {
 // Discard resets the pipeline and discards queued commands.
 func (pipe *ClusterPipeline) Discard() error {
 	if pipe.closed {
-		return errClosed
+		return pool.ErrClosed
 	}
 	pipe.cmds = pipe.cmds[:0]
 	return nil
@@ -35,7 +52,7 @@ func (pipe *ClusterPipeline) Discard() error {
 
 func (pipe *ClusterPipeline) Exec() (cmds []Cmder, retErr error) {
 	if pipe.closed {
-		return nil, errClosed
+		return nil, pool.ErrClosed
 	}
 	if len(pipe.cmds) == 0 {
 		return []Cmder{}, nil
@@ -46,7 +63,7 @@ func (pipe *ClusterPipeline) Exec() (cmds []Cmder, retErr error) {
 
 	cmdsMap := make(map[string][]Cmder)
 	for _, cmd := range cmds {
-		slot := hashSlot(cmd.clusterKey())
+		slot := hashtag.Slot(cmd.clusterKey())
 		addr := pipe.cluster.slotMasterAddr(slot)
 		cmdsMap[addr] = append(cmdsMap[addr], cmd)
 	}
@@ -73,7 +90,7 @@ func (pipe *ClusterPipeline) Exec() (cmds []Cmder, retErr error) {
 			if err != nil {
 				retErr = err
 			}
-			client.putConn(cn, err)
+			client.putConn(cn, err, false)
 		}
 
 		cmdsMap = failedCmds
@@ -82,7 +99,7 @@ func (pipe *ClusterPipeline) Exec() (cmds []Cmder, retErr error) {
 	return cmds, retErr
 }
 
-// Close marks the pipeline as closed
+// Close closes the pipeline, releasing any open resources.
 func (pipe *ClusterPipeline) Close() error {
 	pipe.Discard()
 	pipe.closed = true
@@ -90,16 +107,16 @@ func (pipe *ClusterPipeline) Close() error {
 }
 
 func (pipe *ClusterPipeline) execClusterCmds(
-	cn *conn, cmds []Cmder, failedCmds map[string][]Cmder,
+	cn *pool.Conn, cmds []Cmder, failedCmds map[string][]Cmder,
 ) (map[string][]Cmder, error) {
-	if err := cn.writeCmds(cmds...); err != nil {
+	if err := writeCmd(cn, cmds...); err != nil {
 		setCmdsErr(cmds, err)
 		return failedCmds, err
 	}
 
 	var firstCmdErr error
 	for i, cmd := range cmds {
-		err := cmd.parseReply(cn.rd)
+		err := cmd.readReply(cn)
 		if err == nil {
 			continue
 		}

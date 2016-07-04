@@ -2,6 +2,7 @@ package msgpack
 
 import (
 	"math"
+	"reflect"
 
 	"gopkg.in/vmihailenco/msgpack.v2/codes"
 )
@@ -23,19 +24,19 @@ func (e *Encoder) EncodeUint32(v uint32) error {
 }
 
 func (e *Encoder) EncodeUint64(v uint64) error {
-	switch {
-	case v < 128:
+	if v <= math.MaxInt8 {
 		return e.w.WriteByte(byte(v))
-	case v < 256:
-		return e.write1(codes.Uint8, v)
-	case v < 65536:
-		return e.write2(codes.Uint16, v)
-	case v < 4294967296:
-		return e.write4(codes.Uint32, v)
-	default:
-		return e.write8(codes.Uint64, v)
 	}
-	panic("not reached")
+	if v <= math.MaxUint8 {
+		return e.write1(codes.Uint8, v)
+	}
+	if v <= math.MaxUint16 {
+		return e.write2(codes.Uint16, v)
+	}
+	if v <= math.MaxUint32 {
+		return e.write4(codes.Uint32, v)
+	}
+	return e.write8(codes.Uint64, v)
 }
 
 func (e *Encoder) EncodeInt(v int) error {
@@ -55,19 +56,22 @@ func (e *Encoder) EncodeInt32(v int32) error {
 }
 
 func (e *Encoder) EncodeInt64(v int64) error {
-	switch {
-	case v < -2147483648 || v >= 2147483648:
-		return e.write8(codes.Int64, uint64(v))
-	case v < -32768 || v >= 32768:
-		return e.write4(codes.Int32, uint64(v))
-	case v < -128 || v >= 128:
-		return e.write2(codes.Int16, uint64(v))
-	case v < -32:
-		return e.write1(codes.Int8, uint64(v))
-	default:
+	if v >= 0 {
+		return e.EncodeUint64(uint64(v))
+	}
+	if v >= int64(int8(codes.NegFixedNumLow)) {
 		return e.w.WriteByte(byte(v))
 	}
-	panic("not reached")
+	if v >= math.MinInt8 {
+		return e.write1(codes.Int8, uint64(v))
+	}
+	if v >= math.MinInt16 {
+		return e.write2(codes.Int16, uint64(v))
+	}
+	if v >= math.MinInt32 {
+		return e.write4(codes.Int32, uint64(v))
+	}
+	return e.write8(codes.Int64, uint64(v))
 }
 
 func (e *Encoder) EncodeFloat32(n float32) error {
@@ -115,4 +119,20 @@ func (e *Encoder) write8(code byte, n uint64) error {
 	e.buf[7] = byte(n >> 8)
 	e.buf[8] = byte(n)
 	return e.write(e.buf)
+}
+
+func encodeInt64Value(e *Encoder, v reflect.Value) error {
+	return e.EncodeInt64(v.Int())
+}
+
+func encodeUint64Value(e *Encoder, v reflect.Value) error {
+	return e.EncodeUint64(v.Uint())
+}
+
+func encodeFloat32Value(e *Encoder, v reflect.Value) error {
+	return e.EncodeFloat32(float32(v.Float()))
+}
+
+func encodeFloat64Value(e *Encoder, v reflect.Value) error {
+	return e.EncodeFloat64(v.Float())
 }

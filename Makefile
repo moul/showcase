@@ -1,5 +1,4 @@
 GOENV ?=	GO15VENDOREXPERIMENT=1
-GODEP ?=	$(GOENV) godep
 GO ?=		$(GOENV) go
 SOURCES :=	$(shell find . -name "*.go")
 PORT ?=		8080
@@ -11,23 +10,8 @@ build: moul-showcase
 
 .PHONY: test
 test:
-	$(GO) get github.com/tools/godep
-	$(GODEP) restore
 	$(GO) get -t .
 	$(GO) test -v .
-
-.PHONY: godep-save
-godep-save:
-	$(GO) get github.com/tools/godep
-	$(GODEP) save $(shell go list ./... | grep -v /vendor/)
-
-.PHONY: godep-update
-godep-update:
-	GO15VENDOREXPERIMENT=1 go get -u -v $(go list ./... | grep -v /vendor/)
-	rm -rf vendor Godeps
-	GO15VENDOREXPERIMENT=1 godep save $(go list ./... | grep -v /vendor/)
-	mv Godeps/_workspace/src vendor
-	rm -rf Godeps/_workspace
 
 .PHONY: cover
 cover:
