@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	extTypes [128]reflect.Type
+	extTypes []reflect.Type
 )
 
 var bufferPool = &sync.Pool{
@@ -20,6 +20,9 @@ var bufferPool = &sync.Pool{
 }
 
 func RegisterExt(id int8, value interface{}) {
+	if diff := int(id) - len(extTypes) + 1; diff > 0 {
+		extTypes = append(extTypes, make([]reflect.Type, diff)...)
+	}
 	if extTypes[id] != nil {
 		panic(fmt.Errorf("ext with id %d is already registered", id))
 	}
@@ -61,24 +64,28 @@ func makeExtEncoder(id int8, enc encoderFunc) encoderFunc {
 }
 
 func (e *Encoder) encodeExtLen(l int) error {
-	switch {
-	case l == 1:
+	if l == 1 {
 		return e.w.WriteByte(codes.FixExt1)
-	case l == 2:
-		return e.w.WriteByte(codes.FixExt2)
-	case l == 4:
-		return e.w.WriteByte(codes.FixExt4)
-	case l == 8:
-		return e.w.WriteByte(codes.FixExt8)
-	case l == 16:
-		return e.w.WriteByte(codes.FixExt16)
-	case l < 256:
-		return e.write1(codes.Ext8, uint64(l))
-	case l < 65536:
-		return e.write2(codes.Ext16, uint64(l))
-	default:
-		return e.write4(codes.Ext32, uint64(l))
 	}
+	if l == 2 {
+		return e.w.WriteByte(codes.FixExt2)
+	}
+	if l == 4 {
+		return e.w.WriteByte(codes.FixExt4)
+	}
+	if l == 8 {
+		return e.w.WriteByte(codes.FixExt8)
+	}
+	if l == 16 {
+		return e.w.WriteByte(codes.FixExt16)
+	}
+	if l < 256 {
+		return e.write1(codes.Ext8, uint64(l))
+	}
+	if l < 65536 {
+		return e.write2(codes.Ext16, uint64(l))
+	}
+	return e.write4(codes.Ext32, uint64(l))
 }
 
 func (d *Decoder) decodeExtLen() (int, error) {
@@ -86,6 +93,10 @@ func (d *Decoder) decodeExtLen() (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	return d.extLen(c)
+}
+
+func (d *Decoder) extLen(c byte) (int, error) {
 	switch c {
 	case codes.FixExt1:
 		return 1, nil
@@ -112,14 +123,25 @@ func (d *Decoder) decodeExtLen() (int, error) {
 }
 
 func (d *Decoder) decodeExt() (interface{}, error) {
+	c, err := d.r.ReadByte()
+	if err != nil {
+		return 0, err
+	}
+	return d.ext(c)
+}
+
+func (d *Decoder) ext(c byte) (interface{}, error) {
 	// TODO: use decoded length.
-	_, err := d.decodeExtLen()
+	_, err := d.extLen(c)
 	if err != nil {
 		return nil, err
 	}
 	extId, err := d.r.ReadByte()
 	if err != nil {
 		return nil, err
+	}
+	if int(extId) >= len(extTypes) {
+		return nil, fmt.Errorf("msgpack: unregistered ext id %d", extId)
 	}
 	typ := extTypes[extId]
 	if typ == nil {
@@ -130,4 +152,41 @@ func (d *Decoder) decodeExt() (interface{}, error) {
 		return nil, err
 	}
 	return v.Interface(), nil
+}
+
+func (d *Decoder) skipExt(c byte) error {
+	n, err := d.extLen(c)
+	if err != nil {
+		return err
+	}
+	return d.skipN(n)
+}
+
+func (d *Decoder) skipExtHeader(c byte) (byte, error) {
+	// Read ext type.
+	_, err := d.r.ReadByte()
+	if err != nil {
+		return 0, err
+	}
+	// Read ext body len.
+	for i := 0; i < extHeaderLen(c); i++ {
+		_, err := d.r.ReadByte()
+		if err != nil {
+			return 0, err
+		}
+	}
+	// Read code again.
+	return d.r.ReadByte()
+}
+
+func extHeaderLen(c byte) int {
+	switch c {
+	case codes.Ext8:
+		return 1
+	case codes.Ext16:
+		return 2
+	case codes.Ext32:
+		return 4
+	}
+	return 0
 }

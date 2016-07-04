@@ -1,0 +1,21 @@
+package: github.com/moul/bolosseum
+import:
+- package: github.com/Sirupsen/logrus
+- package: github.com/gin-gonic/gin
+- package: github.com/parnurzeal/gorequest
+- package: github.com/urfave/cli
+- package: github.com/googollee/go-socket.io
+- package: github.com/golang/protobuf
+  subpackages:
+  - proto
+- package: github.com/googollee/go-engine.io
+- package: github.com/manucorporat/sse
+- package: github.com/moul/http2curl
+- package: golang.org/x/net
+  subpackages:
+  - context
+  - publicsuffix
+- package: gopkg.in/go-playground/validator.v8
+- package: gopkg.in/yaml.v2
+- package: github.com/gorilla/websocket
+- package: github.com/moul/shikaku

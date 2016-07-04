@@ -1,0 +1,7 @@
+Dockerfile
+#vendor/
+.git
+*~
+.#*
+*#
+/bolosseum

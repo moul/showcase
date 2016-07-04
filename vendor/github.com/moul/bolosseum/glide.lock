@@ -1,0 +1,37 @@
+hash: fbb15ecb3d2b5adbde8bf868c1191888d4b6bbeded16a6113690862840ad543e
+updated: 2016-06-28T12:38:20.94584275+02:00
+imports:
+- name: github.com/gin-gonic/gin
+  version: f931d1ea80ae95a6fc739213cdd9399bd2967fb6
+- name: github.com/golang/protobuf
+  version: 2402d76f3d41f928c7902a765dfc872356dd3aad
+  subpackages:
+  - proto
+- name: github.com/googollee/go-engine.io
+  version: ca9ced27e02c880970ee7726f9814f8a9c55d777
+- name: github.com/googollee/go-socket.io
+  version: df220121357eaf587d650c4250baeaa90b964b45
+- name: github.com/gorilla/websocket
+  version: a68708917c6a4f06314ab4e52493cc61359c9d42
+- name: github.com/manucorporat/sse
+  version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
+- name: github.com/moul/http2curl
+  version: b1479103caacaa39319f75e7f57fc545287fca0d
+- name: github.com/moul/shikaku
+  version: 60193a2bce43c60bab7eff1a02b568e240fdedb6
+- name: github.com/parnurzeal/gorequest
+  version: f17fef20c518e688f4edb3eb2af148462ecab3ef
+- name: github.com/Sirupsen/logrus
+  version: f3cfb454f4c209e6668c95216c4744b8fddb2356
+- name: github.com/urfave/cli
+  version: b438abf775124d32be72016935a9553dbffe8473
+- name: golang.org/x/net
+  version: f315505cf3349909cdf013ea56690da34e96a451
+  subpackages:
+  - context
+  - publicsuffix
+- name: gopkg.in/go-playground/validator.v8
+  version: c193cecd124b5cc722d7ee5538e945bdb3348435
+- name: gopkg.in/yaml.v2
+  version: a83829b6f1293c91addabc89d0571c246397bbf4
+devImports: []

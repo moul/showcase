@@ -1,0 +1,115 @@
+package: github.com/moul/showcase
+import:
+- package: github.com/BurntSushi/toml
+  version: 056c9bc7be7190eaa7715723883caffa5f8fa3e4
+- package: github.com/DHowett/go-plist
+  version: 9d4781c3725973c23da5f4d1de1920a188e755d3
+- package: github.com/Sirupsen/logrus
+  version: f3cfb454f4c209e6668c95216c4744b8fddb2356
+- package: github.com/codegangsta/cli
+  version: e5bef42c62aa7d25aba4880dc02b7624f01e9e19
+- package: github.com/getmillipede/millipede-go
+  version: a0dab05c43d216dceb73d40578701dce34e6b6a5
+- package: github.com/gin-gonic/gin
+  version: 5caaac4c5c712a9e7a7de29e6c24ef46c753017f
+  subpackages:
+  - binding
+  - render
+- package: github.com/golang/protobuf
+  version: 8616e8ee5e20a1704615e6c8d7afcdac06087a67
+  subpackages:
+  - proto
+- package: github.com/gopherjs/gopherjs
+  version: 244fe9679be7b935139f27fca1c190b7c3ee28fa
+  subpackages:
+  - js
+- package: github.com/gorilla/schema
+  version: 08023a0215e7fc27a9aecd8b8c50913c40019478
+- package: github.com/hydrogen18/stalecucumber
+  version: f7672eb9e84ddc8d602651e7d60eae5b6d221b11
+- package: github.com/jtolds/gls
+  version: 8ddce2a84170772b95dd5d576c48d517b22cac63
+- package: github.com/kortschak/zalgo
+  version: 8c91a4a457cf5b7abdd741f1ee7f73b68a3a8212
+- package: github.com/manucorporat/sse
+  version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
+- package: github.com/mgutz/ansi
+  version: c286dcecd19ff979eeb73ea444e479b903f2cfcb
+- package: github.com/moul/anonuuid
+  version: 8f7eeba4e46dc347b5c12bd700d3a11534b274fc
+- package: github.com/moul/bafelbish
+  version: 4caa08d53915aade3c8e82110f23a9ffc8b45f12
+- package: github.com/moul/bolosseum
+  version: 1c67501a2045a8897251dd5b422d53be5a892845
+  subpackages:
+  - bots
+  - sdks/go
+- package: github.com/moul/connect-four
+  version: 0706016612d58c70352a53bdd07bfd752e94a934
+- package: github.com/moul/einstein-riddle-generator
+  version: 12000570abfbdc5fc0f2315d6016ddfc79383345
+- package: github.com/moul/go-sshkeys
+  version: 6408b003dd3c4d0d5155c4fa834f7b7b68c29a2c
+- package: github.com/moul/no-ansi
+  version: 6d3470fd4353efe713406b8b9cd48115400debfe
+- package: github.com/moul/sapin
+  version: b5549067c1037c6ad577dfb446edd7d4663363fd
+- package: github.com/moul/shikaku
+  version: 60193a2bce43c60bab7eff1a02b568e240fdedb6
+- package: github.com/moul/tictactoe
+  version: 218775e6b4fb3c65c45f940a9fc2203675a77d1b
+  subpackages:
+  - pkg/tictactoebot
+- package: github.com/robfig/go-cache
+  version: 9fc39e0dbf62c034ec4e45e6120fc69433a3ec51
+- package: github.com/smartystreets/assertions
+  version: 40711f7748186bbf9c99977cd89f21ce1a229447
+  subpackages:
+  - internal/go-render/render
+  - internal/oglematchers
+- package: github.com/smartystreets/goconvey
+  version: cc5d85f4f15bd2163abf0fe6e6753356dde72aa2
+  subpackages:
+  - convey
+  - convey/gotest
+  - convey/reporting
+- package: github.com/stvp/rollbar
+  version: 3eb4713e2655cd1be805795be31b3f85b74b05fd
+- package: golang.org/x/crypto
+  version: 77f4136a99ffb5ecdbdd0226bd5cb146cf56bc0e
+  subpackages:
+  - curve25519
+  - ed25519
+  - ed25519/internal/edwards25519
+  - ssh
+  - ssh/terminal
+- package: golang.org/x/net
+  version: 3f122ce3dbbe488b7e6a8bdb26f41edec852a40b
+  subpackages:
+  - context
+  - html
+  - html/atom
+- package: golang.org/x/sys
+  version: f64b50fbea64174967a8882830d621a18ee1548e
+  subpackages:
+  - unix
+- package: gopkg.in/bsm/ratelimit.v1
+  version: bda20d5067a03094fc6762f7ead53027afac5f28
+- package: gopkg.in/bufio.v1
+  version: 567b2bfa514e796916c4747494d6ff5132a1dfce
+- package: gopkg.in/go-playground/validator.v8
+  version: 014792cf3e266caff1e916876be12282b33059e0
+- package: gopkg.in/redis.v3
+  version: 73e1e9f501e946d35387e30f49ef58adda82b4ee
+  subpackages:
+  - internal/consistenthash
+- package: gopkg.in/vmihailenco/msgpack.v2
+  version: c374c7c3dc0758cb8ef9c653b6739362841e245d
+  subpackages:
+  - codes
+- package: gopkg.in/yaml.v2
+  version: a83829b6f1293c91addabc89d0571c246397bbf4
+- package: labix.org/v2/mgo
+  version: gustavo@niemeyer.net-20140501184651-975yyw9ipld92pji
+  subpackages:
+  - bson

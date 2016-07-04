@@ -1,0 +1,8 @@
+sudo: required
+
+services:
+- docker
+
+script:
+- docker build -t moul/bolosseum .
+- docker run -it --rm moul/bolosseum bolosseum run tictactoe stupid stupid

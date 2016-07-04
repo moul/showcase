@@ -1,16 +1,24 @@
 package redis
 
+import (
+	"sync"
+	"sync/atomic"
+
+	"gopkg.in/redis.v3/internal/pool"
+)
+
 // Pipeline implements pipelining as described in
-// http://redis.io/topics/pipelining.
-//
-// Pipeline is not thread-safe.
+// http://redis.io/topics/pipelining. It's safe for concurrent use
+// by multiple goroutines.
 type Pipeline struct {
 	commandable
 
-	client *baseClient
+	client baseClient
 
-	cmds   []Cmder
-	closed bool
+	mu   sync.Mutex // protects cmds
+	cmds []Cmder
+
+	closed int32
 }
 
 func (c *Client) Pipeline() *Pipeline {
@@ -28,35 +36,51 @@ func (c *Client) Pipelined(fn func(*Pipeline) error) ([]Cmder, error) {
 		return nil, err
 	}
 	cmds, err := pipe.Exec()
-	pipe.Close()
+	_ = pipe.Close()
 	return cmds, err
 }
 
 func (pipe *Pipeline) process(cmd Cmder) {
+	pipe.mu.Lock()
 	pipe.cmds = append(pipe.cmds, cmd)
+	pipe.mu.Unlock()
 }
 
+// Close closes the pipeline, releasing any open resources.
 func (pipe *Pipeline) Close() error {
+	atomic.StoreInt32(&pipe.closed, 1)
 	pipe.Discard()
-	pipe.closed = true
 	return nil
+}
+
+func (pipe *Pipeline) isClosed() bool {
+	return atomic.LoadInt32(&pipe.closed) == 1
 }
 
 // Discard resets the pipeline and discards queued commands.
 func (pipe *Pipeline) Discard() error {
-	if pipe.closed {
-		return errClosed
+	defer pipe.mu.Unlock()
+	pipe.mu.Lock()
+	if pipe.isClosed() {
+		return pool.ErrClosed
 	}
 	pipe.cmds = pipe.cmds[:0]
 	return nil
 }
 
+// Exec executes all previously queued commands using one
+// client-server roundtrip.
+//
 // Exec always returns list of commands and error of the first failed
 // command if any.
 func (pipe *Pipeline) Exec() (cmds []Cmder, retErr error) {
-	if pipe.closed {
-		return nil, errClosed
+	if pipe.isClosed() {
+		return nil, pool.ErrClosed
 	}
+
+	defer pipe.mu.Unlock()
+	pipe.mu.Lock()
+
 	if len(pipe.cmds) == 0 {
 		return pipe.cmds, nil
 	}
@@ -76,7 +100,7 @@ func (pipe *Pipeline) Exec() (cmds []Cmder, retErr error) {
 			resetCmds(failedCmds)
 		}
 		failedCmds, err = execCmds(cn, failedCmds)
-		pipe.client.putConn(cn, err)
+		pipe.client.putConn(cn, err, false)
 		if err != nil && retErr == nil {
 			retErr = err
 		}
@@ -88,8 +112,8 @@ func (pipe *Pipeline) Exec() (cmds []Cmder, retErr error) {
 	return cmds, retErr
 }
 
-func execCmds(cn *conn, cmds []Cmder) ([]Cmder, error) {
-	if err := cn.writeCmds(cmds...); err != nil {
+func execCmds(cn *pool.Conn, cmds []Cmder) ([]Cmder, error) {
+	if err := writeCmd(cn, cmds...); err != nil {
 		setCmdsErr(cmds, err)
 		return cmds, err
 	}
@@ -97,7 +121,7 @@ func execCmds(cn *conn, cmds []Cmder) ([]Cmder, error) {
 	var firstCmdErr error
 	var failedCmds []Cmder
 	for _, cmd := range cmds {
-		err := cmd.parseReply(cn.rd)
+		err := cmd.readReply(cn)
 		if err == nil {
 			continue
 		}
