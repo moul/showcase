@@ -1,8 +1,20 @@
-showcase:
-  labels:
-    io.rancher.container.pull_image: always
-  tty: false
-  stdin_open: false
-  image: moul/showcase:latest
-  expose:
-    - "8080"
+version: '2'
+
+services:
+  showcase:
+    labels:
+      io.rancher.container.pull_image: always
+    tty: false
+    stdin_open: false
+    image: moul/showcase:latest
+    environment:
+      - VIRTUAL_HOST=showcase.m.42.am
+    expose:
+      - "8080"
+    networks:
+      - default
+      - service-proxy
+
+networks:
+  service-proxy:
+    external: true
