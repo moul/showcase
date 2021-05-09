@@ -1,4 +1,4 @@
-FROM golang:1.14
+FROM golang:1.16
 COPY . /go/src/github.com/moul/showcase
 WORKDIR /go/src/github.com/moul/showcase
 RUN go install -v ./cmd/moul-showcase
